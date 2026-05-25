@@ -1,6 +1,6 @@
 # Schema
 
-The main data file is `data/open_release_collections.jsonl`. Each line is one JSON object representing a sampled reverse-substring tree collection.
+The main data file is `open_release_collections.jsonl`. Each line is one JSON object representing a sampled reverse-substring tree collection.
 
 ## Top-Level Fields
 
