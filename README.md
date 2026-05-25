@@ -6,9 +6,9 @@ The full dataset contains 600K+ token-web-context-category-explanation records. 
 
 ## Files
 
-- `data/open_release_collections.jsonl`: main machine-readable sample file. Each line is one tree collection.
-- `data/open_release_collections_pretty.json`: same content as the JSONL file, formatted as a JSON array for easier inspection.
-- `docs/schema.md`: field definitions and interpretation notes.
+- `open_release_collections.jsonl`: main machine-readable sample file. Each line is one tree collection.
+- `open_release_collections_pretty.json`: same content as the JSONL file, formatted as a JSON array for easier inspection.
+- `schema.md`: field definitions and interpretation notes.
 - `manifest.json`: release-level metadata for this anonymous review sample.
 
 ## Sample Summary
@@ -27,7 +27,7 @@ The full dataset contains 600K+ token-web-context-category-explanation records. 
 The primary file is JSONL:
 
 ```text
-data/open_release_collections.jsonl
+open_release_collections.jsonl
 ```
 
 Each line is a JSON object describing one sampled tree collection. A collection contains the full tree tokens, the subset of tokens covered by the selected representative reason, excluded tokens for impure trees, and one concise category explanation.
