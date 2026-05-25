@@ -1,4 +1,4 @@
-# Hierarchical Token Collection Sample
+# Hierarchical Chinese Web-Token Collection Sample
 
 This repository contains an anonymous review sample for a hierarchical Chinese web-token dataset.
 
