@@ -1,0 +1,31 @@
+{
+  "release_type": "anonymous_review_sample",
+  "dataset_scope": "20 sampled reverse-substring tree collections",
+  "full_dataset_plan": "The full 600K+ token-web-context-category-explanation dataset is planned for release after acceptance.",
+  "created_for": "anonymous ARR/EMNLP review",
+  "created_date": "2026-05-25",
+  "primary_file": "data/open_release_collections.jsonl",
+  "readable_file": "data/open_release_collections_pretty.json",
+  "schema_file": "docs/schema.md",
+  "collection_count": 20,
+  "tree_direction": "reverse",
+  "pure_tree_collection_count": 10,
+  "impure_tree_collection_count": 10,
+  "full_tree_token_count": 2126,
+  "reason_covered_token_count": 2044,
+  "excluded_non_majority_token_count": 82,
+  "category_distribution": {
+    "adult_content": 9,
+    "online_gambling": 6,
+    "online_video": 2,
+    "online_game": 2,
+    "abnormal_or_noisy_text": 1
+  },
+  "excluded_from_release": [
+    "raw API prompts and responses",
+    "local file paths",
+    "user names",
+    "identity metadata",
+    "full unpublished dataset files"
+  ]
+}
