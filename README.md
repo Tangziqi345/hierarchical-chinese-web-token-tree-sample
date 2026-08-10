@@ -1,82 +1,78 @@
-# Hierarchical Chinese Web Token Dataset: Anonymous Review Sample
+# Hierarchical Chinese Web Token Dataset
 
-This repository contains an anonymous review sample for a hierarchical Chinese web-token dataset described in the accompanying submission.
+This repository provides the full release of the hierarchical Chinese web-token dataset described in the accompanying paper.
 
-The full dataset described contains **630,684 token records organized into 92,972 hierarchical token trees**. For anonymous review, this repository releases **20 sampled token trees** to show the data format, tree structure, category labels, representative tokens, and classification explanations. 
-
-**The full dataset is planned for release after acceptance**. This sample is intended for format inspection and qualitative review, not for estimating corpus-level pollution ratios.
-
+The dataset contains **630,684 distinct token records**. Among them, **503,497 tokens** are organized into **92,972 hierarchical token trees**, while **127,187 tokens** without a tree relation are released as singleton records. Dataset-level counts refer to distinct token strings.
 
 ## Content Warning
 
-This sample contains tokens and short explanations related to adult content, online gambling, online gaming, online video, and anomalous web text. They are included only for research inspection and should be handled with care.
+The dataset contains tokens, web evidence, and short explanations related to adult content, online gambling, online gaming, online video, and anomalous web text. These materials are released only for research and should be handled with care.
 
 ## Files
 
-- `hierarchical_chinese_web_token_tree_sample.jsonl`: main data file. Each line is one sampled hierarchical token tree.
-- `tree_structure_visualization.ipynb`: Jupyter notebook for loading the JSONL file and visualizing the token-tree structure.
+- `hierarchical_chinese_web_token_trees.jsonl.gz`: hierarchical token trees. Each decompressed line is one tree record.
+- `hierarchical_chinese_web_token_singletons.jsonl.gz`: tokens not included in a hierarchical tree. Each decompressed line is one single-node record.
+- `tree_structure_visualization.ipynb`: Jupyter notebook for inspecting records and visualizing tree structures.
 - `README.md`: this documentation file.
 
 ## Data Format
 
-The primary file is:
+Both data files use gzip-compressed JSONL. Each decompressed line is a JSON object with the same main fields:
 
-```text
-hierarchical_chinese_web_token_tree_sample.jsonl
-```
+- `collection_id`: record identifier within this release.
+- `tree_id`: internal tree identifier; `null` for singleton records.
+- `collection_type`: tree or singleton record type.
+- `root`: root token and its English category label.
+- `target_label`: target category represented by the record.
+- `is_pure_tree`: whether all tokens in the record belong to the target category.
+- `labels_in_tree`: category labels appearing in the record.
+- `token_counts`: counts of distinct tokens in the record, including target-category and excluded non-majority tokens.
+- `composition`: optional metadata for documented token-composition cases.
+- `hierarchical_tree`: recursive token-tree structure.
+- `representative_token`: token selected to represent the target category.
+- `classification_reason`: concise English explanation of the record-level category assignment; `null` when suitable web evidence is unavailable.
 
-Each line is a JSON object describing one sampled token tree. The main fields are:
-
-- `collection_id`: anonymized sample collection identifier.
-- `tree_id`: internal tree identifier for distinguishing sampled trees.
-- `collection_type`: type of sampled tree collection.
-- `root`: root token and its category label.
-- `target_label`: target category label for the sampled tree, written in English.
-- `is_pure_tree`: whether all nodes in the sampled tree belong to the target category.
-- `labels_in_tree`: category labels that appear in the tree.
-- `token_counts`: token-count statistics for the sampled tree.
-- `composition`: optional field for composition-token cases.
-- `hierarchical_tree`: recursive tree structure.
-- `representative_token`: representative token for the sampled tree.
-- `classification_reason`: English explanation for the category assignment.
+The six category labels are `Adult Content`, `Online Gambling`, `Online Video`, `Online Gaming`, `Anomalous`, and `Normal Content`.
 
 ## Hierarchical Tree Structure
 
 The `hierarchical_tree` field is recursive. Each node contains:
 
 - `token`: token string.
-- `label`: English category label for the token.
-- `depth`: node depth in the tree.
-- `reason_covered`: whether the node is covered by the representative explanation.
+- `label`: English category label.
+- `depth`: node depth, with the root at depth 0.
+- `reason_covered`: whether the node belongs to the target category covered by the record-level explanation.
+- `web_context`: retrieved web evidence associated with the token; `null` when unavailable.
 - `children`: child nodes.
 
-The data is therefore represented through nested `children` fields, rather than as a flat list of tokens. This release is intended as a format and structure sample rather than a complete data product.
+The nested `children` fields preserve the hierarchical token structure rather than representing each tree as a flat token list. Impure trees retain non-majority nodes, mark them with `reason_covered: false`, and do not assign separate explanations to those nodes.
+
+## Representative Tokens and Explanations
+
+Each tree has one representative token for its target category and one corresponding classification reason derived from the representative token and its web evidence. For singleton records, the token itself is the representative token.
+
+When no suitable evidence is available, the representative token is retained but `classification_reason` is `null`. This applies to 149 tree records and 629 singleton records.
 
 ## Composition Cases
 
-Some sampled trees include a `composition` field for cases where normal component tokens compose into a polluted token family. 
-- `菲律宾` + `申博` -> `菲律宾申博`: `菲律宾` means Philippines and `申博` can mean applying for a PhD; separately they can be normal tokens, but their combination is associated with an online gambling brand. Its descendants include agent, official-site, login, and international-casino variants.
+Two records include optional `composition` metadata for cases where normal component tokens form an online-gambling token in context:
+
+- In tree `46049`, `菲律宾` and `申博` form `菲律宾申博`.
+- In tree `62372`, `北京` and `赛车` form `北京赛车`.
 
 ## Visualization
 
-Use the notebook below to inspect the tree structures:
+Place the notebook and tree data file in the same directory, open `tree_structure_visualization.ipynb` in VS Code, Jupyter Notebook, or JupyterLab, and run all cells.
 
-```text
-tree_structure_visualization.ipynb
-```
-
-Place the notebook and JSONL file in the same directory, open the notebook in VS Code, Jupyter Notebook, or JupyterLab, and run all cells. To inspect a specific tree, use:
+To inspect the composition cases by their featured token or current tree identifier, use:
 
 ```python
-display_tree(11366, max_depth=4)
+display_tree("菲律宾申博", max_depth=3)
+display_tree(62372, max_depth=4)
 ```
 
-The first argument can be a `tree_id`, `collection_id`, or root token. To expand the full tree, use:
+Use `max_depth=None` to expand the complete tree.
 
-```python
-display_tree(11366, max_depth=None)
-```
+## Release Notes
 
-## Anonymity Notes
-
-This repository is prepared for anonymous peer review. It excludes raw prompts or responses, local file paths, user names, identity metadata, and full unpublished dataset files. The full dataset is planned for release after acceptance.
+This full release supersedes the 20-tree anonymous-review sample. Record identifiers are internal to this release and should not be used to match records across different dataset versions.
